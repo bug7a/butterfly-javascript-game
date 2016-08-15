@@ -12,7 +12,7 @@ Player.x = 4; //Kelebeğin kordinatları
 Player.y = 12;
 Player.tempX = 0;
 Player.tempY = 0;
-Player.life = 60; //kelebeğin tokluk durumu
+Player.life = 0; //kelebeğin tokluk durumu
 Player.element = ""; //kelebeğin html deki elemen objesi
 
 
@@ -21,6 +21,8 @@ Player.init = function(){
     
     //Kelebeğin elementi
     Player.element = document.getElementById("player");
+    
+    Player.setLifeValue(60);
     
     //Animate.moveObjectTo();
     
@@ -119,7 +121,8 @@ Player.moveTo = function($direction){
         //alert(parseInt(Player.element.style.left.substr(0, Player.element.style.left.length - 2)));
 
         Player.isMoving = 1; //Oyuncu hareket halinde, hareket tuşlarını pasif yap
-        Animate.moveObjectTo(Player.element, $direction, 4);
+        Player.setLifeValue(Player.getLifeValue() - 1); //Oyuncunun her hareketi +1 can azaltır
+        Animate.moveObjectTo(Player.element, $direction, 5 + parseInt((100 - Player.getLifeValue())/10));
 
         //Oyuncunun ulaşacağı kordinatları ulaştığında konum değişkenlerini güncellemek için hafızada tut.
         Player.tempX = _toX;
@@ -164,7 +167,7 @@ Player.setLifeValue = function($value){
     
     Player.life = $value;
     
-    alert("life: " + Player.life);
+    Board.setPlayerLifeBar($value);
     
 };
 
