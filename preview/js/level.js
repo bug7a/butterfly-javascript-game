@@ -30,6 +30,9 @@ Level.createLevel = function($levelNum){
     
     var _tryTime = 3; //Nesnenin oluşturmak için denenme saysı
     
+    Map.add("enter", 20, 13, {});
+    Map.add("door", 20, 14, {});
+    
     Level.createWall();
     
     //Sol orta duvar

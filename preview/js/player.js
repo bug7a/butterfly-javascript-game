@@ -14,6 +14,7 @@ Player.tempX = 0;
 Player.tempY = 0;
 Player.life = 0; //kelebeğin tokluk durumu
 Player.element = ""; //kelebeğin html deki elemen objesi
+Player.haveKey = 0; //Sahip olduğu anahtar
 
 
 //Program çalıştığında ilk çalışacak fonksiyon
@@ -152,6 +153,31 @@ Player.onCor = function(e){
         //Eğer yeni kordinatta bir hasar alınmış ise;
         if(_returnObject.damage)
             Player.setLifeValue(Player.getLifeValue() - _returnObject.damage);
+        
+        if(_returnObject.key) {
+            //anahtar ile ilgili işlemler
+            Player.haveKey++; //Sahip olduğum anahtar sayısı
+            Board.setKeyStatus(1); //Anahtara sahip olduğunu göster
+            
+        }
+        
+        if(_returnObject.enter){
+            
+            if(Player.haveKey > 0){
+                
+                Player.haveKey--; //Anahtarı bir eksilt
+                Board.setKeyStatus(0);
+                //Kapıyı aç
+                Map.openDoor(_returnObject.doorID);
+                
+            }else{
+                
+                alert("Kapıdan geçebilmek için anahtara ihtiyacınız var.");
+                //Kapıdan geçebilmek için anahtara ihtiyacınız var.
+                
+            }
+            
+        }
         
     }
    

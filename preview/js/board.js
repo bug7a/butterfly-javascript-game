@@ -8,6 +8,8 @@ Board.init = function(){
     Board.playerLifeBarElement = document.getElementById("player-life-bar-status");
     Board.keyElement = document.getElementById("player-key");
     
+    Board.setKeyStatus(0); //Anahtarı görünmez yap.
+    
 };
 
 //Oyuncunun yukarıdaki hayat barını değiştirir
