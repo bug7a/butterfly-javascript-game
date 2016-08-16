@@ -14,9 +14,12 @@ Map.corData = {}; //harita üzerindeki bir kordinattaki nesnenin idsini tutar.
 Map.lastItemID = 0; //harita üzerine eklenen son itemin ID sini taşır.
 Map.itemData = []; //idsi verilen bir itemin diğer bilgilerini taşır.
 
+Map.containerElement = "";
+
 Map.init = function(){
 
     //bağlangıçta çalışması gerken kodların yazıldığı yer.
+    Map.containerElement = document.getElementById( 'game-objects' );
 
 };
 
@@ -28,6 +31,10 @@ Map.add = function($type, $x, $y, $param) {
     //Sayılar noktalı geldiğine sorun oluşuyor.
     $x = parseInt($x);
     $y = parseInt($y);
+    
+    //Kordinat dışı eklemelere izin verme
+    if($x < 1 || $x > Map.maxXCor) $x = 1;
+    if($y < 1 || $y > Map.maxYCor) $y = 1;
     
     //Kordinat dolu ise nesneyi ekleme
     if( Map.getItemIDFromCor($x, $y) == 0 ) {
@@ -47,7 +54,8 @@ Map.add = function($type, $x, $y, $param) {
         }
 
         //Tüm nesneleri taşıyan element
-        var _objectContainer = document.getElementById( 'game-objects' );
+        //var _objectContainer = document.getElementById( 'game-objects' );
+        //Map.containerElement
 
         //Eklenecek nesnenin elementi
         var _item = document.createElement('div');
@@ -77,7 +85,7 @@ Map.add = function($type, $x, $y, $param) {
             
         }
         
-        _objectContainer.appendChild(_item);
+        Map.containerElement.appendChild(_item);
 
         //Elde edilen bilgilerin değişkenlere aktarılması
         Map.corData["c" + $x + "x" + $y] = Map.lastItemID;
@@ -92,6 +100,19 @@ Map.add = function($type, $x, $y, $param) {
     }
 
 };
+
+//Harita üzerindeki bir nesneyi siler
+Map.remove = function($element, $x, $y){
+    
+    //Nesneyi ekrandan kaldır
+    Map.containerElement.removeChild($element);
+    
+    //Nesnenin kordinat ile olan bağlantısını kes
+    Map.corData["c" + $x + "x" + $y] = 0;
+    
+    //TODO: Nesneyi Map.itemData dizisinin içerisinden sil
+    
+}
 
 //tryTime da verilen sayı değeri kadar eklemeyi dene
 Map.tryAdd = function($type, $x, $y, $param, $tryTime){
@@ -109,7 +130,7 @@ Map.tryAdd = function($type, $x, $y, $param, $tryTime){
             
             //Eğer eklenememiş ise farklı bir kordinat dene
             $x = Math.random()* Map.maxXCor;
-            $y = Math.random()*Map.maxYCor;
+            $y = Math.random()* Map.maxYCor;
         }
     }
     
@@ -205,10 +226,16 @@ Map.onPlayerArriveCor = function($x, $y){
                 Map.changeItemImage(_itemProp.element, _itemProp.passiveImage );
                 break;
             case "key":
-                
+                _returnObject.key = 1;
+                Map.remove(_itemProp.element, $x, $y); //Nesneyi haritadan kaldır.
                 break;
-            case "useKey":
-                
+            case "enter":
+                //Anahtar daha önce bu kapı için kullanılmış ise hiç bir işlem yapma
+                if(_itemProp.keyUsed != 1){
+                    _returnObject.enter = 1;
+                    _returnObject.doorID = _itemProp.id + 1;
+                }
+
                 break;
             
         }
@@ -275,6 +302,51 @@ Map.changeItemImage = function($element, $imagePath){
         $element.children[0].setAttribute( 'src', $imagePath );
     }
       
+};
+
+//id si verilen kapının açılması
+Map.openDoor = function($doorID){
+    
+    var _doorIndex = Map.getItemIndexFromID($doorID); //kapı arrayde kaçıncı sırada
+    Map.itemData[_doorIndex].canGo = 1; //Artık kapı nesnesinden geçilebilir
+    
+    //Kapı resmini görünmez yap
+    Map.changeItemImage(Map.itemData[_doorIndex].element, Map.itemData[_doorIndex].passiveImage );
+    
+    var _enterIndex = Map.getItemIndexFromID($doorID - 1); //enter nesnesinin indexini bul
+    Map.itemData[_enterIndex].keyUsed = 1; //Anahtar kullanıldı
+    
+};
+
+//Nesnelerin türkçe karşılıklarını ver
+Map.getTurkishName = function($name) {
+    
+    var _name = "";
+    
+    switch($name){
+        
+        case "tree1":
+        case "tree2":
+            _name = "Ağaç";
+            break;
+            
+        case "rock":
+            _name = "Kaya";
+            break;
+        
+        case "wall1":
+        case "wall2":
+            _name = "Duvar";
+            break;
+            
+        case "door":
+            _name = "Kapı (kilitli)";
+            break;
+        
+    }
+    
+    return _name;
+    
 };
 
 //Nesne objesi oluştur
@@ -368,6 +440,16 @@ Map.createItemPropObject = function($type) {
         _itemObject.canEat = 0;
         _itemObject.foodValue = 0;
         _itemObject.needKey = 1;
+        _itemObject.passiveImage = "asset/door.passive.png";
+        break;
+        
+    case "enter":
+        
+        _itemObject.type = $type;
+        _itemObject.image = "asset/enter.png";
+        _itemObject.canGo = 1;
+        _itemObject.keyUsed = 0;
+    
         break;
         
     case "trap":

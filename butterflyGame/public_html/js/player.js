@@ -14,6 +14,7 @@ Player.tempX = 0;
 Player.tempY = 0;
 Player.life = 0; //kelebeğin tokluk durumu
 Player.element = ""; //kelebeğin html deki elemen objesi
+Player.haveKey = 0; //Sahip olduğu anahtar
 
 
 //Program çalıştığında ilk çalışacak fonksiyon
@@ -21,6 +22,12 @@ Player.init = function(){
     
     //Kelebeğin elementi
     Player.element = document.getElementById("player");
+    
+    //Oyuncunun ilk baştaki yüklenme (gecikme) sorununa çözüm olarak yazıldı. 
+    Player.turnTo("down");
+    Player.turnTo("right");
+    Player.turnTo("left");
+    Player.turnTo("up");
     
     Player.setLifeValue(60);
     
@@ -68,6 +75,12 @@ Player.listenToTheKey = function(e) {
                     
                     //Besin değerini oyuncunun can değişkenine ekle
                     Player.setLifeValue(Player.getLifeValue() + _returnObject.foodValue);
+                    
+                    //Yenen yemek hakkında bilgi
+                    Board.showAlert("Besin değeri " + _returnObject.foodValue + " olan bir gıda tükettiniz.", "info");
+                    
+                    //Birşeyler yeme sesi çıkar
+                    Sound.play(Sound.SOUND_NAMES.EAT);
                     
                 }
                 
@@ -128,6 +141,11 @@ Player.moveTo = function($direction){
         Player.tempX = _toX;
         Player.tempY = _toY;
 
+    }else{
+        
+        //Eğer üzerinden geçilemeyecek bir nesneden geçmeye çalışırsa uyar.
+        Board.showAlert("Bir " + Map.getTurkishName(_itemObject.type) + " üzerinden geçmezsiniz.", "alert");
+        
     }
         
 };
@@ -150,8 +168,46 @@ Player.onCor = function(e){
         Player.isMoving = 0; //Oyuncu tekrar hareket etmeye hazır
         
         //Eğer yeni kordinatta bir hasar alınmış ise;
-        if(_returnObject.damage)
+        if(_returnObject.damage) {
+            
             Player.setLifeValue(Player.getLifeValue() - _returnObject.damage);
+            
+            //Alınan hasarı söyle
+            Board.showAlert("Yüzde " + _returnObject.damage + " hasar aldınız.","danger");
+            
+            //Hasar alma sesi çıkar
+            Sound.play(Sound.SOUND_NAMES.HURT);
+            
+        }
+            
+        
+        if(_returnObject.key) {
+            //anahtar ile ilgili işlemler
+            Player.haveKey++; //Sahip olduğum anahtar sayısı
+            Board.setKeyStatus(1); //Anahtara sahip olduğunu göster
+            
+            //Anahtarın alınma sesini çıkar
+            Sound.play(Sound.SOUND_NAMES.KEY);
+            
+        }
+        
+        if(_returnObject.enter){
+            
+            if(Player.haveKey > 0){
+                
+                Player.haveKey--; //Anahtarı bir eksilt
+                Board.setKeyStatus(0);
+                //Kapıyı aç
+                Map.openDoor(_returnObject.doorID);
+                
+            }else{
+                
+                Board.showAlert("Kapıdan geçebilmek için anahtara ihtiyacınız var.", "alert");
+                //Kapıdan geçebilmek için anahtara ihtiyacınız var.
+                
+            }
+            
+        }
         
     }
    

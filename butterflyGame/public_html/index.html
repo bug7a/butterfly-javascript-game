@@ -11,6 +11,7 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <link rel="stylesheet" type="text/css" href="css/butterflygame.css">
+        <script src="js/sound.js"></script>
         <script src="js/map.js"></script>
         <script src="js/level.js"></script>
         <script src="js/animate.js"></script>
@@ -22,8 +23,9 @@ and open the template in the editor.
         
     </head>
     <body>
+
         <div id="butterfly-game-container">
-                        
+           
             <div id="game-objects">
 
             </div>
@@ -33,6 +35,26 @@ and open the template in the editor.
             <div id="player-life-bar"><div id="player-life-bar-status"></div><img style="position: absolute;left: -30px;top:-4px;" src="asset/heart.png" width="20" height="20"></div>
             <div id="player-key"><img src="asset/key.png"></div>
             
+            <div id="alert-box-container">
+                <div id="alert-box"></div>
+            </div>
+            
         </div>
+        
+            
+        
+        <audio id="key-sound">
+          <source src="sound/key.wav" type="audio/wav">
+          Your browser does not support the audio element.
+        </audio>
+        
+        <audio id="eat-sound">
+          <source src="sound/eat.wav" type="audio/wav">
+        </audio>
+        
+        <audio id="hurt-sound">
+          <source src="sound/hurt.mp3" type="audio/mpeg">
+        </audio>
+         
     </body>
 </html>
