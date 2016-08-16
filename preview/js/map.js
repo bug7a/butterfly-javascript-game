@@ -32,6 +32,10 @@ Map.add = function($type, $x, $y, $param) {
     $x = parseInt($x);
     $y = parseInt($y);
     
+    //Kordinat dışı eklemelere izin verme
+    if($x < 1 || $x > Map.maxXCor) $x = 1;
+    if($y < 1 || $y > Map.maxYCor) $y = 1;
+    
     //Kordinat dolu ise nesneyi ekleme
     if( Map.getItemIDFromCor($x, $y) == 0 ) {
         
@@ -126,7 +130,7 @@ Map.tryAdd = function($type, $x, $y, $param, $tryTime){
             
             //Eğer eklenememiş ise farklı bir kordinat dene
             $x = Math.random()* Map.maxXCor;
-            $y = Math.random()*Map.maxYCor;
+            $y = Math.random()* Map.maxYCor;
         }
     }
     
@@ -311,6 +315,37 @@ Map.openDoor = function($doorID){
     
     var _enterIndex = Map.getItemIndexFromID($doorID - 1); //enter nesnesinin indexini bul
     Map.itemData[_enterIndex].keyUsed = 1; //Anahtar kullanıldı
+    
+};
+
+//Nesnelerin türkçe karşılıklarını ver
+Map.getTurkishName = function($name) {
+    
+    var _name = "";
+    
+    switch($name){
+        
+        case "tree1":
+        case "tree2":
+            _name = "Ağaç";
+            break;
+            
+        case "rock":
+            _name = "Kaya";
+            break;
+        
+        case "wall1":
+        case "wall2":
+            _name = "Duvar";
+            break;
+            
+        case "door":
+            _name = "Kapı (kilitli)";
+            break;
+        
+    }
+    
+    return _name;
     
 };
 
