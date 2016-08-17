@@ -6,12 +6,16 @@ Board.keyElement = "";
 Board.alertBoxElement = "";
 Board.alertBoxTimeOut = "";
 
+Board.playerScoreElement = "";
+Board.playerScore = 0;
+
 Board.init = function(){
     
     Board.playerLifeBarElement = document.getElementById("player-life-bar-status");
     Board.keyElement = document.getElementById("player-key");
     
     Board.alertBoxElement = document.getElementById("alert-box");
+    Board.playerScoreElement = document.getElementById("player-score");
     
     Board.setKeyStatus(0); //Anahtarı görünmez yap.
     
@@ -88,5 +92,15 @@ Board.showAlert = function($text, $type){
 Board.hideAlert = function(){
     
     Board.alertBoxElement.style.display = "none";
+    
+};
+
+//Score u değiştirir
+Board.addScore = function($score) {
+  
+    //Yeni veriyi skora ekle veya çıkar
+    Board.playerScore = Board.playerScore + $score;
+    
+    Board.playerScoreElement.innerHTML = Board.playerScore;
     
 };

@@ -67,6 +67,8 @@ Map.add = function($type, $x, $y, $param) {
         //resim elementi
         var _itemImg = document.createElement( 'img' );
         _itemImg.setAttribute( 'src', _itemObject.image );
+        _itemImg.setAttribute( 'width', "32" );
+        _itemImg.setAttribute( 'height', "32" );
 
         //Oluşturulan elementin nesne özelliklerine kaydedilmesi
         _itemObject.element = _item; //TODO kontrol et çalışacakmı getElementByID ile tekrar çek.

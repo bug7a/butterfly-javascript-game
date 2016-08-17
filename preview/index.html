@@ -6,7 +6,7 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>Kelebeğin Macerası v1</title>
+        <title>Kelebeğin macerası 1.0</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
@@ -23,25 +23,37 @@ and open the template in the editor.
         
     </head>
     <body>
-
-        <div id="butterfly-game-container">
-           
-            <div id="game-objects">
-
-            </div>
-            
-            <div id="player" style="top:352px;left:96px"><img src="asset/butterfly.up.png"></div>
-            
-            <div id="player-life-bar"><div id="player-life-bar-status"></div><img style="position: absolute;left: -30px;top:-4px;" src="asset/heart.png" width="20" height="20"></div>
-            <div id="player-key"><img src="asset/key.png"></div>
-            
-            <div id="alert-box-container">
-                <div id="alert-box"></div>
-            </div>
-            
-        </div>
         
-            
+        <div id="page-container">
+
+            <div id="butterfly-game-container">
+
+                <div id="game-objects">
+
+                </div>
+
+                <div id="player" style="top:352px;left:96px"><img src="asset/player/player1.up.png"></div>
+
+                <div id="player-life-bar"><div id="player-life-bar-status"></div><img style="position: absolute;left: -30px;top:-4px;" src="asset/heart.png" width="20" height="20"></div>
+                <div id="player-key"><img src="asset/key.png"></div>
+                <div id="player-score">0</div>
+
+                <div id="alert-box-container">
+                    <div id="alert-box"></div>
+                </div>
+                
+                <div id="game-info" class="game-text">
+                    <div><b>Ok Tuşları (Arrow Keys):</b> Oyuncunun hareketini sağlar.</br><b>Boşluk (Space):</b> Üzerinde bulunduğun besini tüketir.</div>
+                </div>
+                
+                <div id="game-title" class="game-text">
+                    <div><b>Kelebeğin macerası</b> 1.0</div>
+                </div>
+
+
+            </div>
+        
+        </div>
         
         <audio id="key-sound">
           <source src="sound/key.wav" type="audio/wav">
