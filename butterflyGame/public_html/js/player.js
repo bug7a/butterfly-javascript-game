@@ -8,6 +8,7 @@ Player.KEY_LEFT = 37;
 Player.SPACE = 32;
 
 Player.isMoving = 0; //Kelebek hareket halindemi
+Player.activeStatus = 1;
 Player.x = 4; //Kelebeğin kordinatları
 Player.y = 12;
 Player.tempX = 0;
@@ -23,26 +24,54 @@ Player.init = function(){
     //Kelebeğin elementi
     Player.element = document.getElementById("player");
     
-    //Oyuncunun ilk baştaki yüklenme (gecikme) sorununa çözüm olarak yazıldı. 
-    Player.turnTo("down");
-    Player.turnTo("right");
-    Player.turnTo("left");
-    Player.turnTo("up");
-    
-    Player.setLifeValue(60);
-    
-    //Animate.moveObjectTo();
+    //Oyuncunun değerlerini resetle
+    Player.clear();
     
     // Listen to keyboard. 
     window.onkeydown = Player.listenToTheKey;
     window.addEventListener('objectArrived', Player.onCor, false);
     
+    //Oyuncunun hareketini durdur
+    //Player.active(0);
+    
 };
+
+Player.clear = function(){
+    
+    //Değişkenlerin başlangıç değeri
+    Player.isMoving = 0; //Kelebek hareket halindemi
+    Player.x = 4; //Kelebeğin kordinatları
+    Player.y = 12;
+    Player.tempX = 0;
+    Player.tempY = 0;
+    Player.life = 0; //kelebeğin tokluk durumu
+    Player.haveKey = 0; //Sahip olduğu anahtar
+    
+    //Seçilen oyuncunun ilk resimini yükle
+    Player.turnTo("up");
+    
+    //Başlangıç değeri
+    Player.setLifeValue(60);
+    
+    //İlk kordinatlarına ışınla
+    Player.element.style.top = Map.getYPXFromCor(Player.y) + "px";
+    Player.element.style.left = Map.getXPXFromCor(Player.x) + "px";
+    
+};
+
+//Oyuncunun hareketini durdur 1:hareket et 0:dur
+Player.active = function($status) {
+    
+    if($status != 0) $status = 1;
+    
+    Player.activeStatus = $status;
+    
+}
 
 //Bir tuşa basıldığında çalışacak fonksiyon
 Player.listenToTheKey = function(e) {
     
-    if(Player.isMoving == 0){
+    if(Player.isMoving == 0 && Player.activeStatus == 1){
 
         switch(e.keyCode) {
 
@@ -76,8 +105,11 @@ Player.listenToTheKey = function(e) {
                     //Besin değerini oyuncunun can değişkenine ekle
                     Player.setLifeValue(Player.getLifeValue() + _returnObject.foodValue);
                     
+                    //Oyuncunun skoruna ekle
+                    Board.addScore(_returnObject.foodValue);
+                    
                     //Yenen yemek hakkında bilgi
-                    Board.showAlert("Besin değeri " + _returnObject.foodValue + " olan bir gıda tükettiniz.", "info");
+                    //Board.showAlert("Besin değeri " + _returnObject.foodValue + " olan bir gıda tükettiniz.", "info");
                     
                     //Birşeyler yeme sesi çıkar
                     Sound.play(Sound.SOUND_NAMES.EAT);
@@ -96,7 +128,7 @@ Player.listenToTheKey = function(e) {
 Player.turnTo = function($direction){
     
     //MODEL: <div id="player" style="top:352px;left:96px"><img src="asset/butterfly.up.png"></div>
-    Player.element.children[0].setAttribute( 'src', 'asset/butterfly.' +  $direction + '.png' );
+    Player.element.children[0].setAttribute( 'src', 'asset/player/' + Global.selectedPlayerName + '.' +  $direction + '.png' );
     
 };
 
@@ -144,7 +176,7 @@ Player.moveTo = function($direction){
     }else{
         
         //Eğer üzerinden geçilemeyecek bir nesneden geçmeye çalışırsa uyar.
-        Board.showAlert("Bir " + Map.getTurkishName(_itemObject.type) + " üzerinden geçmezsiniz.", "alert");
+        Board.showAlert("Bir " + Map.getTurkishName(_itemObject.type) + " üzerinden geçemezsiniz.", "alert");
         
     }
         
@@ -152,10 +184,7 @@ Player.moveTo = function($direction){
 
 Player.onCor = function(e){
     
-    //tuzak olabilir.
-    //anahtar alınabilir
     //başka bir canlı ile kesişebilir
-    //kapının önüne gelmiş olabilir. Anahtar var ise kapı açılacak.
     
     if(e.objectID == "player"){
 
@@ -172,6 +201,9 @@ Player.onCor = function(e){
             
             Player.setLifeValue(Player.getLifeValue() - _returnObject.damage);
             
+            //Oyuncunun skorundan çıkar
+            Board.addScore(_returnObject.damage * -1);
+            
             //Alınan hasarı söyle
             Board.showAlert("Yüzde " + _returnObject.damage + " hasar aldınız.","danger");
             
@@ -186,6 +218,9 @@ Player.onCor = function(e){
             Player.haveKey++; //Sahip olduğum anahtar sayısı
             Board.setKeyStatus(1); //Anahtara sahip olduğunu göster
             
+            //Anahtar ile ilgili bilgi
+            Board.showAlert("Artık bir anahtara sahipsin.", "info");
+            
             //Anahtarın alınma sesini çıkar
             Sound.play(Sound.SOUND_NAMES.KEY);
             
@@ -199,6 +234,9 @@ Player.onCor = function(e){
                 Board.setKeyStatus(0);
                 //Kapıyı aç
                 Map.openDoor(_returnObject.doorID);
+                
+                //Oyuncuya kapının açıldığı bilgisini ver
+                Board.showAlert("Anahtarını kullanarak bir kapıyı açtın.", "info");
                 
             }else{
                 
@@ -224,6 +262,9 @@ Player.setLifeValue = function($value){
     Player.life = $value;
     
     Board.setPlayerLifeBar($value);
+    
+    //Can kalmadığında oyunu bitir.
+    if(Player.life == 0) Page.show(Page.NAME.GAME_OVER);
     
 };
 

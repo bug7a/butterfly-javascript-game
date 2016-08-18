@@ -6,16 +6,19 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>Kelebeğin Macerası v1</title>
+        <title>Kelebeğin macerası 1.0</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <link rel="stylesheet" type="text/css" href="css/butterflygame.css">
+        <link rel="stylesheet" type="text/css" href="css/page.css">
+        <script src="js/global.js"></script>
         <script src="js/sound.js"></script>
         <script src="js/map.js"></script>
         <script src="js/level.js"></script>
         <script src="js/animate.js"></script>
         <script src="js/board.js"></script>
+        <script src="js/page.js"></script>
         <script src="js/player.js"></script>
         <script src="js/bug.js"></script>
         <script src="js/butterflygame.js"></script>
@@ -23,25 +26,110 @@ and open the template in the editor.
         
     </head>
     <body>
-
-        <div id="butterfly-game-container">
-           
-            <div id="game-objects">
-
-            </div>
-            
-            <div id="player" style="top:352px;left:96px"><img src="asset/butterfly.up.png"></div>
-            
-            <div id="player-life-bar"><div id="player-life-bar-status"></div><img style="position: absolute;left: -30px;top:-4px;" src="asset/heart.png" width="20" height="20"></div>
-            <div id="player-key"><img src="asset/key.png"></div>
-            
-            <div id="alert-box-container">
-                <div id="alert-box"></div>
-            </div>
-            
-        </div>
         
-            
+        <div id="page-container">
+
+            <div id="butterfly-game-container" class="unselectable">
+                
+                <div id="hidden-box">
+                    <img src="asset/player/player1.up.png">
+                    <img src="asset/player/player1.down.png">
+                    <img src="asset/player/player1.left.png">
+                    <img src="asset/player/player1.right.png">
+                    
+                    <img src="asset/player/player2.up.png">
+                    <img src="asset/player/player2.down.png">
+                    <img src="asset/player/player2.left.png">
+                    <img src="asset/player/player2.right.png">
+                    
+                    <img src="asset/player/player3.up.png">
+                    <img src="asset/player/player3.down.png">
+                    <img src="asset/player/player3.left.png">
+                    <img src="asset/player/player3.right.png">
+                </div>
+
+                <div id="game-objects">
+
+                </div>
+
+                <div id="player" style="top:352px;left:96px"><img src="asset/player/player1.up.png"></div>
+
+                <div id="player-life-bar"><div id="player-life-bar-status"></div><img style="position: absolute;left: -30px;top:-4px;" src="asset/heart.png" width="20" height="20"></div>
+                <div id="player-key"><img src="asset/key.png"></div>
+                <div id="player-score">0</div>
+
+                <div id="alert-box-container">
+                    <div id="alert-box"></div>
+                </div>
+                
+                <div id="game-info" class="game-text">
+                    <div><b>Ok Tuşları (Arrow Keys):</b> Oyuncunun hareketini sağlar.</br><b>Boşluk (Space):</b> Üzerinde bulunduğun besini tüketir.</div>
+                </div>
+                
+                <div id="game-title" class="game-text">
+                    <div><b>Kelebeğin macerası</b> 1.0</div>
+                </div>  
+                
+                <div id="start-page" class="game-pages" style="display: block;">
+                    
+                    <div class="page-sub-container" style="background-color: #fafafa; "></div>
+                    
+                    <div class="page-sub-container">
+                    
+                        <div style="">
+                            
+                            <div style="margin-bottom: 20px;text-align: center;color:#333333; "><b>Lütfen bir oyuncu seçiniz</b></div>
+                            <div>
+                                <div id="player1-btn" class="start-page-player-btn selected" onclick="Page.playerSelectBtnClicked('player1')"><img src="asset/player/player1.up.png"></div>
+                                <div id="player2-btn" class="start-page-player-btn" onclick="Page.playerSelectBtnClicked('player2')"><img src="asset/player/player2.up.png"></div>
+                                <div id="player3-btn" class="start-page-player-btn" style="margin-right: 0px;" onclick="Page.playerSelectBtnClicked('player3')"><img src="asset/player/player3.up.png"></div>
+                            </div>
+                            <div style="padding-top: 20px;clear: left;text-align: center;" onclick="ButterFlyGame.startGame()"><img src="image/start-btn.png"></div>
+                        </div>
+                    
+                    </div>
+                    
+                </div>
+                <div id="game-over-page" class="game-pages" style="display: none">
+                    
+                    <div class="page-sub-container" style="background-color: orangered; opacity: 0.7; "></div>
+                    
+                    <div class="page-sub-container">
+                        
+                        <div style="text-align: center;">
+                            
+                            <div style="color: white;font-size: 30px;font-weight: bold;margin-bottom: 25px;">Devam edecek gücün kalmadı.</div>
+
+                            <div onclick="Page.show(Page.NAME.START);"><img src="image/close-btn.png"></div>
+                        
+                        </div>
+                        
+                    </div>
+                
+                </div>
+                <div id="game-win-page" class="game-pages" style="display: none">
+                    
+                    <div class="page-sub-container" style="background-color: mediumseagreen; opacity: 0.7; "></div>
+                    
+                    <div class="page-sub-container">
+                        
+                        <div style="text-align: center;">
+                            
+                            <div style="color: white;font-size: 30px;font-weight: bold;margin-bottom: 10px;">Tebirkler. Başardınız.</div>
+                            <div id="game-win-description" style="color: white;font-size: 18px;opacity: 0.6;margin-bottom: 25px;">Oyunu X puanla tamamladınız.</div>
+
+                            <div onclick="Page.show(Page.NAME.START);"><img src="image/close-btn.png"></div>
+                        
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+
+
+            </div>
+        
+        </div>
         
         <audio id="key-sound">
           <source src="sound/key.wav" type="audio/wav">

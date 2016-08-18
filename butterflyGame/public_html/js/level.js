@@ -28,6 +28,12 @@ Level.createWall = function(){
 //numarası verilen levelı oluşturur
 Level.createLevel = function($levelNum){
     
+    //Level ı oluşturmadan önce map i temizle
+    Map.clear();
+    
+    //Board u temiz
+    Board.clear();
+    
     var _tryTime = 3; //Nesnenin oluşturmak için denenme saysı
     
     Map.add("enter", 20, 13, {});
