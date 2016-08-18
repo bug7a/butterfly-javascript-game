@@ -23,6 +23,19 @@ Map.init = function(){
 
 };
 
+//Map class ını ilk haline getir.
+Map.clear = function(){
+    
+    //Eklenen tüm objeleri sil
+    Map.containerElement.innerHTML = "";
+    
+    //Değişkenleri temizle
+    Map.corData = {}; 
+    Map.lastItemID = 0; 
+    Map.itemData = [];
+    
+};
+
 //harita üzerine bir nesne(ağaç, elma, taş, duvar vs..) ekleme kodu
 Map.add = function($type, $x, $y, $param) {
     
@@ -238,6 +251,10 @@ Map.onPlayerArriveCor = function($x, $y){
                     _returnObject.doorID = _itemProp.id + 1;
                 }
 
+                break;
+            case "door":
+                //Eğer kapıyı açıp içeri adım atarsas oyunu sonlandır.
+                Page.show(Page.NAME.GAME_WIN);
                 break;
             
         }

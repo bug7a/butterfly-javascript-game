@@ -8,6 +8,7 @@ Player.KEY_LEFT = 37;
 Player.SPACE = 32;
 
 Player.isMoving = 0; //Kelebek hareket halindemi
+Player.activeStatus = 1;
 Player.x = 4; //Kelebeğin kordinatları
 Player.y = 12;
 Player.tempX = 0;
@@ -23,26 +24,54 @@ Player.init = function(){
     //Kelebeğin elementi
     Player.element = document.getElementById("player");
     
-    //Oyuncunun ilk baştaki yüklenme (gecikme) sorununa çözüm olarak yazıldı. 
-    Player.turnTo("down");
-    Player.turnTo("right");
-    Player.turnTo("left");
-    Player.turnTo("up");
-    
-    Player.setLifeValue(60);
-    
-    //Animate.moveObjectTo();
+    //Oyuncunun değerlerini resetle
+    Player.clear();
     
     // Listen to keyboard. 
     window.onkeydown = Player.listenToTheKey;
     window.addEventListener('objectArrived', Player.onCor, false);
     
+    //Oyuncunun hareketini durdur
+    //Player.active(0);
+    
 };
+
+Player.clear = function(){
+    
+    //Değişkenlerin başlangıç değeri
+    Player.isMoving = 0; //Kelebek hareket halindemi
+    Player.x = 4; //Kelebeğin kordinatları
+    Player.y = 12;
+    Player.tempX = 0;
+    Player.tempY = 0;
+    Player.life = 0; //kelebeğin tokluk durumu
+    Player.haveKey = 0; //Sahip olduğu anahtar
+    
+    //Seçilen oyuncunun ilk resimini yükle
+    Player.turnTo("up");
+    
+    //Başlangıç değeri
+    Player.setLifeValue(60);
+    
+    //İlk kordinatlarına ışınla
+    Player.element.style.top = Map.getYPXFromCor(Player.y) + "px";
+    Player.element.style.left = Map.getXPXFromCor(Player.x) + "px";
+    
+};
+
+//Oyuncunun hareketini durdur 1:hareket et 0:dur
+Player.active = function($status) {
+    
+    if($status != 0) $status = 1;
+    
+    Player.activeStatus = $status;
+    
+}
 
 //Bir tuşa basıldığında çalışacak fonksiyon
 Player.listenToTheKey = function(e) {
     
-    if(Player.isMoving == 0){
+    if(Player.isMoving == 0 && Player.activeStatus == 1){
 
         switch(e.keyCode) {
 
@@ -99,7 +128,7 @@ Player.listenToTheKey = function(e) {
 Player.turnTo = function($direction){
     
     //MODEL: <div id="player" style="top:352px;left:96px"><img src="asset/butterfly.up.png"></div>
-    Player.element.children[0].setAttribute( 'src', 'asset/player/player1.' +  $direction + '.png' );
+    Player.element.children[0].setAttribute( 'src', 'asset/player/' + Global.selectedPlayerName + '.' +  $direction + '.png' );
     
 };
 
@@ -233,6 +262,9 @@ Player.setLifeValue = function($value){
     Player.life = $value;
     
     Board.setPlayerLifeBar($value);
+    
+    //Can kalmadığında oyunu bitir.
+    if(Player.life == 0) Page.show(Page.NAME.GAME_OVER);
     
 };
 

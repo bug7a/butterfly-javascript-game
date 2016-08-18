@@ -1,0 +1,60 @@
+.game-pages {
+    
+    position: absolute;
+    top:0px;
+    left:0px;
+    width: 100%;
+    height: 100%;
+    
+    /* background-color: white; */
+    /* opacity: 0.85; */
+    
+}
+
+.start-page-player-btn {
+    
+    
+    float: left;
+    padding: 30px;
+    margin: 10px;
+    margin-left: 0px;
+    width: 32px;
+    height: 32px;
+    background-color: white;
+    border: 2px solid darkgray;
+    
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+
+}
+
+.start-page-player-btn.selected {
+    
+    border: 2px solid darkorange;
+    background-color: antiquewhite;
+    
+}
+
+
+.start-page-player-btn:hover {
+    
+    /* border: 2px solid black; */
+    /* opacity: 0.8; */
+    background-color: antiquewhite;
+    
+}
+
+
+.page-sub-container {
+    
+    position: absolute;
+    top:0px;
+    left:0px;
+    width: 100%;
+    height: 100%;
+    
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    
+}

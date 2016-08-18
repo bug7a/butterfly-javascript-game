@@ -7,7 +7,7 @@ Board.alertBoxElement = "";
 Board.alertBoxTimeOut = "";
 
 Board.playerScoreElement = "";
-Board.playerScore = 0;
+Board.lifeDangerAlert = 0;
 
 Board.init = function(){
     
@@ -18,6 +18,18 @@ Board.init = function(){
     Board.playerScoreElement = document.getElementById("player-score");
     
     Board.setKeyStatus(0); //Anahtarı görünmez yap.
+    
+};
+
+//Bir önceki oyundan kalma verileri temizle
+Board.clear = function(){
+    
+    Board.setKeyStatus(0); //Anahtarı görünmez yap.
+    
+    //Skoru sıfırla
+    Global.playerScore = 0; 
+    Board.addScore(0);
+    
     
 };
 
@@ -34,7 +46,15 @@ Board.setPlayerLifeBar = function($life){
         Board.playerLifeBarElement.style.backgroundColor = 'mediumseagreen';
     }else if($life > 20){
         Board.playerLifeBarElement.style.backgroundColor = 'darkorange';
+        Board.lifeDangerAlert = 0;
     }else{
+        
+        //Açlık durumu tehlikeli bir seviyeye düşerse uyar
+        if(Board.lifeDangerAlert == 0) {
+            Board.showAlert("Açlık durumunuz tehlikeli bir seviyede.", "danger");
+            Board.lifeDangerAlert = 1;
+        }
+        
         Board.playerLifeBarElement.style.backgroundColor = 'brown';
     }
     
@@ -99,8 +119,8 @@ Board.hideAlert = function(){
 Board.addScore = function($score) {
   
     //Yeni veriyi skora ekle veya çıkar
-    Board.playerScore = Board.playerScore + $score;
+    Global.playerScore = Global.playerScore + $score;
     
-    Board.playerScoreElement.innerHTML = Board.playerScore;
+    Board.playerScoreElement.innerHTML = Global.playerScore;
     
 };

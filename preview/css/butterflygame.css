@@ -15,6 +15,16 @@ body {
     
     background-color: beige;
     
+    font-family: Arial;
+    
+}
+
+*.unselectable {
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
 }
 
 #page-container {
@@ -34,7 +44,7 @@ body {
 #game-info {
     
     position: absolute;
-    left:32px;
+    left:10px;
     top:calc(100% + 30px);
  
 }
@@ -42,7 +52,7 @@ body {
 #game-title {
     
     position: absolute;
-    left:32px;
+    left:10px;
     top:-30px;
     
 }
@@ -187,3 +197,16 @@ body {
     opacity: 0.7;
     
 }
+
+#hidden-box {
+    
+    position: absolute;
+    top:0px;
+    left:0px;
+    width: 1px;
+    height: 1px;
+    
+    display: none;
+    
+}
+
