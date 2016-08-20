@@ -9,8 +9,19 @@ ButterFlyGame.init = function() {
     Sound.init();
     Board.init();
     Player.init();
+
+    //Start page in arka planını oyun olarak göster
+    //Oyuncunun değerlerini resetle
+    Player.clear();
     
-    //Page.show(Page.NAME.GAME_OVER);
+    //Bölümü oluştur
+    Level.createLevel(1);
+    
+    //Başlangıç sayfasını aç
+    Page.show(Page.NAME.START);
+    
+    //Page.show(Page.NAME.GAME_WIN);
+    
 
 };
 
@@ -24,6 +35,9 @@ ButterFlyGame.startGame = function(){
     
     //Bölümü oluştur
     Level.createLevel(1);
+    
+    //Oyuncunun ok tuşlarını aktif yap
+    Player.active(1);
     
 };
 

@@ -1,3 +1,4 @@
+
 function Sound() {};
 
 Sound.keySoundElement = "";

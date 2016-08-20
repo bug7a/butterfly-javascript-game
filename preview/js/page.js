@@ -30,6 +30,10 @@ Page.show = function($pageName){
     switch($pageName){
         
         case Page.NAME.START:
+            
+            //Player oklar ile yönetilemesin
+            Player.active(0);
+            
             Page.startPageElement.style.display = "block";
             break;
             
