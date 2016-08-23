@@ -26,7 +26,7 @@ ButterFlyGame.init = function() {
     Page.show(Page.NAME.START);
     
     //Page.show(Page.NAME.GAME_WIN);
-    ButterFlyGame.startGame();
+    //ButterFlyGame.startGame();
 
 };
 
