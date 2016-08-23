@@ -17,6 +17,8 @@ Player.life = 0; //kelebeğin tokluk durumu
 Player.element = ""; //kelebeğin html deki elemen objesi
 Player.haveKey = 0; //Sahip olduğu anahtar
 
+Player.spacePressedWhenMoving = 0; //Oyuncu hareket halindeyken space tuşuna basıldı.
+
 
 //Program çalıştığında ilk çalışacak fonksiyon
 Player.init = function(){
@@ -42,6 +44,8 @@ Player.clear = function(){
     Player.isMoving = 0; //Kelebek hareket halindemi
     Player.x = 4; //Kelebeğin kordinatları
     Player.y = 12;
+    Global.playerX = Player.x;
+    Global.playerY = Player.y;
     Player.tempX = 0;
     Player.tempY = 0;
     Player.life = 0; //kelebeğin tokluk durumu
@@ -71,6 +75,13 @@ Player.active = function($status) {
 //Bir tuşa basıldığında çalışacak fonksiyon
 Player.listenToTheKey = function(e) {
     
+    //Oyuncu hareket halindeyse
+    if(Player.isMoving == 1 && Player.activeStatus == 1) {
+        
+        Player.spacePressedWhenMoving = 1;
+        
+    }
+    
     if(Player.isMoving == 0 && Player.activeStatus == 1){
 
         switch(e.keyCode) {
@@ -97,6 +108,9 @@ Player.listenToTheKey = function(e) {
 
             case Player.SPACE:
                 
+                //otomatik space tuşunu çalıştımayı temizle
+                Player.spacePressedWhenMoving = 0;
+
                 //Kordinatta besin var ise onu ye
                 var _returnObject = Map.eat(Player.x, Player.y);
                 
@@ -192,9 +206,20 @@ Player.onCor = function(e){
         Player.x = Player.tempX;
         Player.y = Player.tempY;
         
+        //Player kordinatlarını herkesin ulaşabilmesi için globale kopyala
+        Global.playerX = Player.x;
+        Global.playerY = Player.y;
+        
         //Ulaşılan kordinatta meydana gelen olayların sonucu
         var _returnObject = Map.onPlayerArriveCor(Player.x, Player.y);
         Player.isMoving = 0; //Oyuncu tekrar hareket etmeye hazır
+        
+        if(Player.spacePressedWhenMoving == 1){
+            
+            //space tuşuna otomatik tekrar bas
+            Player.listenToTheKey({keyCode:Player.SPACE});
+            
+        }
         
         //Eğer yeni kordinatta bir hasar alınmış ise;
         if(_returnObject.damage) {
