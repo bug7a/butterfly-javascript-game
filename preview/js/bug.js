@@ -64,10 +64,10 @@ function Bug() {
 
         //Oyuncunun yönünü çevir
         this.turnTo($direction);
+        
+            this.setLifeValue(this.getLifeValue() - 1); //Oyuncunun her hareketi +1 can azaltır
 
             this.isMoving = 1; //Oyuncu hareket halinde, hareket tuşlarını pasif yap
-            
-            this.setLifeValue(this.getLifeValue() - 1); //Oyuncunun her hareketi +1 can azaltır
             if(this.life != 0) Animate.moveObjectTo(this.element, $direction, 10 + parseInt(Math.random()*10)); //default:10
 
     };
