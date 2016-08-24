@@ -1,21 +1,23 @@
 
+//Oyun üzerindeki böceklerin; topladıkları bilgiler doğrultusunda karar vererek hareket etmelerini sağlayan sınıf.
 function Bug() {
     
-    this.bugID = 0;
-    this.bugType = "";
-    this.element = "";
+    this.bugID = 0; //böceğin id si
+    this.bugType = ""; //böceğin tipi bug1 veya bug2 olabilir (resim dosyaları eklenerek farklı canlılar yapılabilir)
+    this.element = ""; //böceğin html deki nesnesi
     this.x = 0; //böceğin bulunduğu kordinat
     this.y = 0;
     this.tempX = 0; //böceğin ulaştığı kordinat bulunduğu kordinatı güncellemek için
     this.tempY = 0;
     this.historyX = 0; //böceğin bir önceki adımda bulunduğu kordinat
     this.historyY = 0;
-    this.life = 100; //böceğin life değeri başlangıçta random atanır (100-1000)
-    this.maxLife = 100;
-    this.isMoving = 0;
-    this.bugTimeout = 0;
-    this.direction = "";
-    this.damage = 0; //random 1 - 4
+    this.life = 100; //böceğin şu andaki can değeri
+    this.maxLife = 100; //böceğin max life değeri başlangıçta random atanır
+    this.isMoving = 0; //Böcek hareket halinde mi? 1:evet, 0:hayır
+    this.bugTimeout = 0; //Böceğin beklemesinin tutulduğu değişken
+    this.direction = ""; //Böceğin yönünü tutuyor
+    this.damageToPlayer = 0; //Böcek bir oyuncu tespit etti ve ona yöneliyor (1:evet 0:hayır)
+    this.stopMe = 0; //Eğer böcek durdurulmak isteniyor ise kordinata ulaştığında bunu yap
     
     
     //böceği istenilen yöne döndürür,  param: up, down, rigth, left
@@ -29,8 +31,7 @@ function Bug() {
     //Böceğin hayat seviyesini değiştir
     this.setLifeValue = function($value){
 
-        //$value 0 -- 1000 arasında olmalı
-
+        //$value 0 -- ? arasında olmalı
         if($value < 0) $value = 0;
         if($value > this.maxLife) $value = this.maxLife;
         
@@ -38,6 +39,7 @@ function Bug() {
         var _percent = parseInt(($value / this.maxLife) * 100);
         this.element.children[1].children[0].style.width = _percent + "%";
 
+        //değişkeni güncelle
         this.life = $value;
 
         //Can kalmadığında oyunu bitir.
@@ -66,7 +68,7 @@ function Bug() {
             this.isMoving = 1; //Oyuncu hareket halinde, hareket tuşlarını pasif yap
             
             this.setLifeValue(this.getLifeValue() - 1); //Oyuncunun her hareketi +1 can azaltır
-            if(this.life != 0) Animate.moveObjectTo(this.element, $direction, 10);
+            if(this.life != 0) Animate.moveObjectTo(this.element, $direction, 10 + parseInt(Math.random()*10)); //default:10
 
     };
 
@@ -75,6 +77,7 @@ function Bug() {
         
         var _that = this;
         
+        //Böcek her yeni kordinata vardığında foksiyonu tetikle
         window.addEventListener('objectArrived', function(e){
             
             _that.onCor(e);
@@ -84,34 +87,43 @@ function Bug() {
         //ilk düşünmeyi başlat
         this.think();
         
-        /*
-        var _that = this;
-                
-        this.bugInterval = setInterval(function(){
-            
-            _that.think();
-            
-        }, 320 + 1500);
-        */
-        
     };
-        
+    
+    //Böceği mezar taşına çevir
     this.stopBug = function(){
         
-        //Böceğin resmini taş olarak değişir
-        this.element.children[0].setAttribute( 'src', 'asset/bugs/' + this.bugType + '.stop.png' );
-        this.element.children[1].style.display = 'none';
-        this.damage = 0;
+        if(this.isMoving == 0){
 
+            //Böceğin resmini taş olarak değişir
+            this.element.children[0].setAttribute( 'src', 'asset/bugs/' + this.bugType + '.stop.png' );
+
+            //Böceğin can barını görünmez yap
+            this.element.children[1].style.display = 'none';
+
+            //Böceğin can değerini 0 a çevir.
+            this.life = 0;
+
+            //Beklemenden sonra tekrar düşünmesini engelle
+            clearTimeout(this.bugTimeout);
+
+            return 1; //böcek durduruldu
+            
+        }else{
+            
+            //Böcek kordinata ulaştığında otomatik durdur.
+            this.stopMe = 1;
+            
+            return 0; //durdurulamadı
+
+        }
+        
     };
     
     //Böcek bir sonraki hamlesine karar verir.
     this.think = function(){
         
-        var _that = this;
-        
-        //if(this.isMoving == 1) Board.alert("hareket halindeyken düşünmeye başladı", "info");
-        
+        var _that = this; //farklı bir nesnenin içerisinden bug nesnesine ulaşmak için kullanılacak değişken.
+
         var _directionList = []; //Böceğin gidebileceği kordinatların listesi
         var _historyDirection = {}; //Böceğin bir önceki geldiği yer
         
@@ -131,38 +143,47 @@ function Bug() {
                 _toX = $toX;
                 _toY = $toY;
 
+                //Kordinattaki nesnenin özelliklerini al
                 var _itemObject = Map.getItemPropFromCor(_toX, _toY);
 
+                //Nesnenin üzerinden geçilebilirse veya kordinat boş ise devam et.
                 if(_itemObject.canGo == 1 || _itemObject == 0) {
 
                     //Öncelikli bir hedef (oyuncu) bulundu
                     if(_toX == Global.playerX && _toY == Global.playerY){
 
-                        _dontCheckOtherCor = 1;
-                        _directionList = []; //bulunan tüm hedefleri yoksay
+                        _dontCheckOtherCor = 1; //Değer kordinatlar kontrol edilirken öncelikli hedef bulunduğunu hatırlamak için kullan
+                        _that.damageToPlayer = 1; //Kordinata ulaştığında oyuncunun bulunduğunu hatırlamak için değişkeni kullan
+
+                        _directionList = []; //önceden bulunan tüm hedefleri yoksay
 
                     }
                     
-                    //
+                    //Böceğin bir önceki kordinatı tespit edildi bu kordinata öncelik verme
                     if(_toX == this.historyX && _toY == this.historyY && _dontCheckOtherCor == 0) {
                         
-                        //bir önceki kordinat bulundu
-                        //Gidilebilecek en son kordinat
+                        //bir önceki kordinat bulundu (Önceliği olmayan bir istikamet)
                         _historyDirection = {x:_toX, y:_toY, direction:$direction};
                         
-                        //Gidilebilecek sadece geldiğimiz kordinat varsa ve orasıda bir böcek tarafından kapatılmış ise bekle
-                        //_directionList boş ise ve historCor boş ise bekle
+                        // KURAL
+                        // Gidilebilecek sadece geldiğimiz kordinat varsa ve orasıda bir böcek tarafından kapatılmış ise bekle
+                        // _directionList boş ise ve historCor boş ise bekle
                         
                     }else{
                         
+                        //Bulunan gidilebilir kordinatı daha sonra içinden seçmek üzere listeye ekle
                         _directionList.push({x:_toX, y:_toY, direction:$direction});
                         
                         //Gidilebilen bu kordinat ileriye doğru bir yönde
                         if($direction == _that.direction) {
                         
+                            //Bu istikametin seçilme olasılığını arttır.
                             for(var i = 0; i < 4; i++) {
                                 _directionList.push({x:_toX, y:_toY, direction:$direction});
                             }
+                            
+                            // KURAL
+                            // Böcek ileriye doğru ilerlemeyi daha çok tercih etmeli seçilme olasılığını arttır.
                             
                         }
                         
@@ -181,88 +202,62 @@ function Bug() {
         _checkCor(this.x, this.y - 1, "up"); //(UP)
         _checkCor(this.x, this.y, "wait"); //(WAIT)
         
-        //Board.showAlert(this.bugID + ": " + _directionList.length);
-        
-        //Gidilebilecek hiç biryer bulunamamış
+        //Gidilebilecek hiç bir yer bulunamamış ise
         if(_directionList.length == 0) {
             
-            //Bir önceki kordinatı kontrol et
+            //Bir önceki kordinatı kontrol et gidilebilir mi?
             if(_historyDirection.direction) {
                 
-                //gidilebilecek yerlere bir önceki kordinatı ekle
+                //gidilebilecek başka yer olmadığı için bir önceki konum listeye eklenebilir.
                 _directionList.push(_historyDirection);
                 
             }else{
                 
-                //Gidilecek hiç bir yer yok ve önceki kordinat kapatılmış (BEKLE)
+                //Gidilecek hiç bir yer yok ve önceki kordinat kapatılmış ise bekle (Bir böcek tarafından kapatılmış olabilir)
                 _directionList.push({x:this.x, y:this.y, direction:"wait"});
-                
-                
+ 
             }
-            
-        }else{
-            
-            //if(_dontCheckOtherCor == 0) {
-                
-                //Beklemek için kayıt aç
-                //_directionList.push({x:this.x, y:this.y, direction:"wait"});
-                
-            //}
             
         }
         
-        //Eğer bir değeri üretili ise değeri yok say
+        //Eğer 1 değeri üretili ise değeri yok say (1 değerinin üretilmesi dizi indeksinin dışına çıkacağı için hataya sebep olacaktır)
+
         //TODO: Math.random komutunun 1 üretme olasılığını araştır.
         var _randomValue = Math.random();    
         if(_randomValue == 1) _randomValue = 0.7;
         
+        //Yapılabilecek iş listesinin içerisinden rasgele bir iş seç
         _directionListIndex = parseInt(Math.random() * (_directionList.length));
         
-        //İstenilen kordinata doğru hareket et
+        //Kordinata vardığında konumu güncellemek için gidilecek kordinatları temp değişkende sakla
+        this.tempX = _directionList[_directionListIndex].x;
+        this.tempY = _directionList[_directionListIndex].y;
+        
+        //Seçilen iş bekleme değil ise
         if(_directionList[_directionListIndex].direction != "wait") {
             
+            //Seçilen kordinata doğru hareket et
             this.moveTo(_directionList[_directionListIndex].direction);
             
         }else {
-            //Bekleme kodunu yaz TODO:Bu kodu kaldır
-            //this.historyX = this.x; //Bir önceki kordinatları tut.
-            //this.historyY = this.y;
 
-            //Bir sonraki adımı düşün
+            //Seçilen iş bekleme ise raskele bir süre bekle ve tekrar düşünmeye başla
             clearTimeout(this.bugTimeout);
             this.bugTimeout = setTimeout(function(){
+                
+                //Bir sonraki hamle için düşünmeye başla
                 if(_that.life != 0) _that.think();
-            }, 100 + parseInt(Math.random() * 2000));
+                
+            }, 100 + parseInt(Math.random() * 2000)); //rasgele bir süre bekle
             
         }
-
-        this.tempX = _directionList[_directionListIndex].x;
-        this.tempY = _directionList[_directionListIndex].y;
-
-/*
-        
-        this.moveTo("right");
-        */
-
-        //Böceğin çevresindeki gidilebilecek kordinatların bir listesini çıkar
-        //Bu listeden öncelikli hedef var ise oraya yönel yoksa random olarak yönel
-        //Eğer 4 yönden gidilemeyecek (duvar, ağaç) yerler var ise onları hesaba katma
-        //Böcekler eğer gidebilecekleri başka bir kordinat yok ise geldikleri yöne geri dönebilir.
-        //Eğer oyuncu böceğin ulaşabileceği bir kordinatta ise; öncelik ona yönelmek olsun.
-        //Böcek isterse hiç hareket etmemeyi de seçebilir.
-        //Böcek oyuncunun üzerine geldiğinde random bir hasar vursun.
-        //Böcek canı bittiğinde mezar taşına dönüşsün. ve hasarı 0 olsun.
-        //böcek bir gıda üzerinden geçerken otomatik tüketsin.
-        
-        //Her hareketten sonra 0-200ms arası dinlen.
-        //böcekler 320ms bir haret edecek
-        
+   
     };
     
     //Böcek kordinata ulaştı
     this.onCor = function(e) {
       
-        if(e.objectID == this.bugID){ //this.bugID
+        if(e.objectID == this.bugID){ //Kordinata varmış olan bu böcek ise
             
             this.historyX = this.x; //Bir önceki kordinatları tut.
             this.historyY = this.y;
@@ -271,37 +266,78 @@ function Bug() {
 
             this.isMoving = 0; //Böceğin hareketi bitti
             
-            //Tekrar düşünmeye başlamadan önce bir gıda var ise onu tüket
-            var _returnObject = Map.eat(this.x, this.y);
+            //Böceğin durdurulması istenmiyor ise
+            if(this.stopMe == 0) {
+                
+                //Geldiği kordinatta oyuncu bulunmuş ise
+                if(this.damageToPlayer == 1) {
 
-            if(_returnObject.foodValue) {
+                    //Oyuncu hala böceğin yeni ulaştığı kordinatta duruyor ise
+                    if(Global.playerX == this.x && Global.playerY == this.y) {
 
-                //Besin değerini böceğin can değişkenine ekle
-                this.setLifeValue(this.getLifeValue() + _returnObject.foodValue);
+                        this.damageToPlayer = 0; //Bana bu kordinatta oyuncunun olduğunu hatırlatan değişkeni temizle
 
+                        //Böceğin oyuncuya hasar verme olayını tetikle
+                        var _damageEvent = document.createEvent("Event");
+                        _damageEvent.initEvent("bugDamage",true,true);
+
+                        //Verilecek hasarın miktarını rasgele belirle
+                        _damageEvent.damage = 1 + parseInt(Math.random() * 5);
+
+                        document.dispatchEvent(_damageEvent); //Olayın gerçekleştiğini duyur
+
+                    }
+
+                }
+
+                //Tekrar düşünmeye başlamadan önce bir gıda var ise onu tüket
+                var _returnObject = Map.eat(this.x, this.y);
+
+                //Bir besin değeri geri dönmüş ise
+                if(_returnObject.foodValue) {
+
+                    //Besin değerini böceğin can değişkenine ekle
+                    this.setLifeValue(this.getLifeValue() + _returnObject.foodValue);
+
+                }
+
+                //Böcek hayatta ise; bir sonraki hamleyi düşün
+                if(this.life != 0) this.think();
+                
+            }else {
+                
+                //Böceği durdur
+                this.stopBug();
+                
             }
 
-            if(this.life != 0) this.think();
-            
         }
         
     };
     
 };
 
-Bug.bugIDCount = 0;
-Bug.bugList = [];
+Bug.bugIDCount = 0; //Her böcek eklendiğinde 1 artar
+Bug.bugList = []; //Tüm böcek nesnelerinin tutulduğu dizi
 
-Bug.bugContainerElement = "";
+Bug.bugContainerElement = ""; //Böceklerin bulunduğu html tag i
 
 Bug.init = function(){
     
     //ilk çalışan kod
     Bug.bugContainerElement = document.getElementById("bug-container");
     
-    //myBug2ID =  Bug.createNewBug("bug2");
-    //Bug.getBug(myBug2ID).turnTo("down");
-    //Bug.getBug(myBug2ID).removeBug();
+};
+
+//Tüm böcek nesnelerini temizle
+Bug.clear = function(){
+    
+    //tüm böcekleri durdur.
+    for(var i = 0; i < Bug.bugList.length; i++) {
+        
+        Bug.bugList[i].stopBug();
+        
+    }
     
 };
 
@@ -335,17 +371,18 @@ Bug.createNewBug = function($bugType){
             
         }
         
-        //Eğer 100 kere dönerse döngüden çık
+        //Eğer 100 kere dönerse döngüden çık (Hiç bir yer bulunmadığında kitlenmeye karşı koruma)
         if(_whileCount > 100) break;
     
     }
 
-    //Yeni bir böcek class ı oluştur.
+    //Yeni bir böcek sınıfı (class) ı oluştur.
     Bug.bugList.push(new Bug());
     
     //Sürekli kullanım için nesne ismini kısalt
     var _myBug = Bug.bugList[_bugID];
     
+    //Yeni böcekle ilgili verileri düzenle
     _myBug.bugID = _bugID;
     _myBug.bugType = $bugType;
     _myBug.element = Bug.createBugElement(_bugID, _x, _y);
@@ -353,14 +390,12 @@ Bug.createNewBug = function($bugType){
     _myBug.y = _y;
     _myBug.historyX = _x;
     _myBug.historyY = _y;
-    
-    //_myBug.maxLife = 100;
-    _myBug.maxLife = 100 + parseInt(Math.random() * 900); //bir can seviyesi belirle
-    _myBug.damage = 1 + parseInt(Math.random() * 5); //bir hasar belirle
+    _myBug.maxLife = 50 + parseInt(Math.random() * 100); //bir can seviyesi belirle
     _myBug.life = _myBug.maxLife;
     _myBug.setLifeValue(_myBug.maxLife); //Böceğin can değerini bar a yansıt
     _myBug.turnTo("up"); //böceğin ilk resmini yükle
     
+    //Yeni böceğin elementini html dökümanına ekleyerek görünür olmasını sağla
     Bug.bugContainerElement.appendChild(_myBug.element);
     
     //Böcek düşünmeye başlasın
@@ -377,7 +412,7 @@ Bug.createBugElement = function($bugID, $x, $y){
     
     //MODEL: <div id="player" style="top:352px;left:96px"><img src="asset/player/player1.up.png"></div>
     
-    //Eklenecek nesnenin elementi
+    //Eklenecek böcek nesnesinin ana elementi
     var _item = document.createElement('div');
     //_item.setAttribute('class', 'objects-style');
     _item.style.top = Map.getXPXFromCor($y) + 'px';
@@ -393,18 +428,18 @@ Bug.createBugElement = function($bugID, $x, $y){
     _itemImg.setAttribute( 'width', "32" );
     _itemImg.setAttribute( 'height', "32" );
     
-    //can barını oluştur
+    //Can barının taşıyıcı elementi
     var _itemBar = document.createElement('div');
     _itemBar.setAttribute("class", "bug-life-bar");
     
-    //can barı seviyesi
+    //Can barı seviyesinin elementi
     var _itemBarStatus = document.createElement('div');
     _itemBarStatus.setAttribute("class", "bug-life-bar-status");
     
-    //barstatus u bar ın içine ekle
+    //Can barı seviyesini can varının içine ekle
     _itemBar.appendChild(_itemBarStatus);
     
-    //Oluşturulan image element nesnesinin ust element nesnesine eklenmesi
+    //Oluşturulan alt elementleri ana elemente ekle ve html e eklemek üzere tamamlanmış nesneyi return et.
     _item.appendChild(_itemImg);
     _item.appendChild(_itemBar);
     
@@ -412,6 +447,7 @@ Bug.createBugElement = function($bugID, $x, $y){
     
 };
 
+//ID si verilen böceğin yönetici sınıfını (classını) döndür.
 Bug.getBug = function($bugID) {
     
     return Bug.bugList[$bugID];
@@ -424,6 +460,7 @@ Bug.getBug = function($bugID) {
 
 ### KOD TASLAĞI ###
 
+NOT: Bu proje için kullanılan standartları içerir. Global javascript standartları değildir.
 
 ClassName.PUBLIC_STATIC_CONST = "public-static-const";
 ClassName.publicStaticVariable = "public-static-variable";

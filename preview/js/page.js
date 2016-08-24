@@ -26,11 +26,14 @@ Page.show = function($pageName){
     //Tüm sayfaları kapat
     Page.hideAll();
     
+    //Değişkeni bulunduğumuz sayfa olarak güncelle
+    Global.selectedPage = $pageName;
+    
     //ismi verilen sayfayı görünür yap.
     switch($pageName){
         
         case Page.NAME.START:
-            
+
             //Player oklar ile yönetilemesin
             Player.active(0);
             

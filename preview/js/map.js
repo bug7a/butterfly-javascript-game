@@ -472,7 +472,7 @@ Map.createItemPropObject = function($type) {
         _itemObject.image = "asset/trap.png";
         _itemObject.canGo = 1;
         _itemObject.canEat = 0;
-        _itemObject.damage = 40;
+        _itemObject.damage = 15;
         _itemObject.passiveImage = "asset/trap.passive.png";
         break;
     

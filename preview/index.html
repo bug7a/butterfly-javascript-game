@@ -46,25 +46,18 @@ and open the template in the editor.
                     <img src="asset/player/player3.down.png">
                     <img src="asset/player/player3.left.png">
                     <img src="asset/player/player3.right.png">
-                </div>
-
-                <div id="game-objects">
-
-                </div>
-                
-                <div id="bug-container">
                     
-
-                </div>
-
-                <div id="player" style="top:352px;left:96px"><img src="asset/player/player1.up.png"></div>
-
-                <div id="player-life-bar"><div id="player-life-bar-status"></div><img style="position: absolute;left: -30px;top:-4px;" src="asset/heart.png" width="20" height="20"></div>
-                <div id="player-key"><img src="asset/key.png"></div>
-                <div id="player-score">0</div>
-
-                <div id="alert-box-container">
-                    <div id="alert-box"></div>
+                    <img src="asset/bugs/bug1.up.png">
+                    <img src="asset/bugs/bug1.down.png">
+                    <img src="asset/bugs/bug1.left.png">
+                    <img src="asset/bugs/bug1.right.png">
+                    <img src="asset/bugs/bug1.stop.png">
+                    
+                    <img src="asset/bugs/bug2.up.png">
+                    <img src="asset/bugs/bug2.down.png">
+                    <img src="asset/bugs/bug2.left.png">
+                    <img src="asset/bugs/bug2.right.png">
+                    <img src="asset/bugs/bug2.stop.png">
                 </div>
                 
                 <div id="game-info" class="game-text">
@@ -73,7 +66,25 @@ and open the template in the editor.
                 
                 <div id="game-title" class="game-text" style='font-size: 20px;'>
                     <div><b>Kelebeğin macerası</b> 1.0</div>
-                </div>  
+                </div>
+
+                <div id="game-objects">
+
+                </div>
+                
+                <div id="player" style="top:352px;left:96px"><img src="asset/player/player1.up.png"></div>
+                
+                <div id="bug-container">
+                    
+                </div>
+
+                <div id="player-life-bar"><div id="player-life-bar-status"></div><img style="position: absolute;left: -30px;top:-4px;" src="asset/heart.png" width="20" height="20"></div>
+                <div id="player-key"><img src="asset/key.png"></div>
+                <div id="player-score">0</div>
+
+                <div id="alert-box-container">
+                    <div id="alert-box"></div>
+                </div>
                 
                 <div id="start-page" class="game-pages" style="display: block;">
                     
@@ -147,6 +158,10 @@ and open the template in the editor.
         
         <audio id="hurt-sound">
           <source src="sound/hurt.mp3" type="audio/mpeg">
+        </audio>
+        
+        <audio id="attack-sound">
+          <source src="sound/bip.wav" type="audio/wav">
         </audio>
          
     </body>
