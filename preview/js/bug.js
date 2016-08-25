@@ -159,7 +159,7 @@ function Bug() {
                 var _isAnotherBugThere = 0;
                 
                 //Eğer kendi bulunduğu kordinatı kontrol ediyor ise fonksiyonu çalıştırma
-                if(_toX != _that.x && _toY != _that.y) {
+                if(_toX != _that.x || _toY != _that.y) {
                     _isAnotherBugThere = Bug.checkBugOnCor(_toX, _toY);
                 }
 
