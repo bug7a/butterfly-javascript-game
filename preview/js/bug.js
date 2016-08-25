@@ -72,6 +72,10 @@ function Bug() {
         if(this.life != 0) {
             
             this.isMoving = 1; //Oyuncu hareket halinde, hareket tuşlarını pasif yap
+            
+            //Gidilecek kordinatı rezerve et, diğer böcekler oraya gelmesin
+            Bug.corData["c" + this.tempX + "x" + this.tempY] = 1;
+            
             Animate.moveObjectTo(this.element, $direction, 10 + parseInt(Math.random()*10)); //default:10
             
         }
@@ -151,9 +155,16 @@ function Bug() {
 
                 //Kordinattaki nesnenin özelliklerini al
                 var _itemObject = Map.getItemPropFromCor(_toX, _toY);
+                
+                var _isAnotherBugThere = 0;
+                
+                //Eğer kendi bulunduğu kordinatı kontrol ediyor ise fonksiyonu çalıştırma
+                if(_toX != _that.x && _toY != _that.y) {
+                    _isAnotherBugThere = Bug.checkBugOnCor(_toX, _toY);
+                }
 
                 //Nesnenin üzerinden geçilebilirse veya kordinat boş ise devam et.
-                if(_itemObject.canGo == 1 || _itemObject == 0) {
+                if((_itemObject.canGo == 1 || _itemObject == 0) && _isAnotherBugThere == 0) {
 
                     //Öncelikli bir hedef (oyuncu) bulundu
                     if(_toX == Global.playerX && _toY == Global.playerY){
@@ -267,8 +278,13 @@ function Bug() {
             
             this.historyX = this.x; //Bir önceki kordinatları tut.
             this.historyY = this.y;
+            
+            Bug.corData["c" + this.x + "x" + this.y] = 0;
+            
             this.x = this.tempX; //Yeni kordinatları güncelle
             this.y = this.tempY;
+            
+            Bug.corData["c" + this.x + "x" + this.y] = 1;
 
             this.isMoving = 0; //Böceğin hareketi bitti
             
@@ -327,12 +343,28 @@ Bug.bugIDCount = 0; //Her böcek eklendiğinde 1 artar
 Bug.bugList = []; //Tüm böcek nesnelerinin tutulduğu dizi
 
 Bug.bugContainerElement = ""; //Böceklerin bulunduğu html tag i
+Bug.corData = {}; //Tüm böceklerin bulunduğu kordinatları tutar
 
 Bug.init = function(){
     
     //ilk çalışan kod
     Bug.bugContainerElement = document.getElementById("bug-container");
     
+};
+
+//Kordinatta bir böcek var mı?
+Bug.checkBugOnCor = function($x, $y){
+    
+    if(Bug.corData["c" + $x + "x" + $y]){
+        
+        return 1;
+        
+    }else {
+        
+        return 0;
+        
+    }
+
 };
 
 //Tüm böcek nesnelerini temizle

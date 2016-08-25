@@ -26,6 +26,14 @@ ButterFlyGame.init = function() {
     
     //Başlangıç sayfasını aç
     Page.show(Page.NAME.START);
+    
+    //Yüklenme sayfasını kapat
+    document.getElementById("loading-page").style.display = "none";
+    
+    //Bu bir mobile browser değil
+    if(window.mobileAndTabletcheck() == false){
+        document.getElementById("keys-btn-container").style.display = "none";
+    }
 
 };
 

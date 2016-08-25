@@ -12,6 +12,8 @@ and open the template in the editor.
         
         <link rel="stylesheet" type="text/css" href="css/butterflygame.css">
         <link rel="stylesheet" type="text/css" href="css/page.css">
+        
+        <script src="js/utilty.js"></script>
         <script src="js/global.js"></script>
         <script src="js/sound.js"></script>
         <script src="js/map.js"></script>
@@ -86,6 +88,16 @@ and open the template in the editor.
                     <div id="alert-box"></div>
                 </div>
                 
+                <div id="keys-btn-container" class="game-pages" style="display: block;">
+
+                    <div onclick="Player.listenToTheKey({keyCode:Player.SPACE});" style="position: absolute; left:50px; bottom: 50px;"><img src="image/space-btn.png"></div>
+                    <div onclick="Player.listenToTheKey({keyCode:Player.KEY_RIGHT});" style="position: absolute; right:50px; bottom: 50px;"><img src="image/arrow-btn.png"></div>
+                    <div onclick="Player.listenToTheKey({keyCode:Player.KEY_DOWN});" style="position: absolute; right:120px; bottom: 50px;"><img src="image/arrow-btn.png"></div>
+                    <div onclick="Player.listenToTheKey({keyCode:Player.KEY_LEFT});" style="position: absolute; right:190px; bottom: 50px;"><img src="image/arrow-btn.png"></div>
+                    <div onclick="Player.listenToTheKey({keyCode:Player.KEY_UP});" style="position: absolute; right:120px; bottom: 120px;"><img src="image/arrow-btn.png"></div>
+                    
+                </div>
+                
                 <div id="start-page" class="game-pages" style="display: block;">
                     
                     <div class="page-sub-container" style="background-image: url('image/start-background.png');background-repeat: no-repeat;"></div>
@@ -123,6 +135,7 @@ and open the template in the editor.
                     </div>
                 
                 </div>
+                
                 <div id="game-win-page" class="game-pages" style="display: none">
                     
                     <div class="page-sub-container" style="background-color: mediumseagreen; opacity: 0.7; "></div>
@@ -142,6 +155,21 @@ and open the template in the editor.
                     
                 </div>
 
+                <div id="loading-page" class="game-pages" style="display: block">
+                    
+                    <div class="page-sub-container" style="background-color: white; opacity:1; "></div>
+                    
+                    <div class="page-sub-container">
+                        
+                        <div style="text-align: center;">
+
+                            <div><img src="image/loading.gif"></div>
+                        
+                        </div>
+                        
+                    </div>
+                    
+                </div>
 
             </div>
         
