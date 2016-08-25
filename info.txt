@@ -1,0 +1,18 @@
+Butterfly Adventure 1.0
+
+A -very basic- game made with javascript (no framework used) and game dev tutorial videos in Turkish.
+
+Year   : 4 Aug 2016
+Autor  : Buğra ÖZDEN
+Mail   : bugra.ozden@gmail.com
+Site   : http://basitoyunyapmak.blogspot.com.tr/
+
+You are free:
+
+to Share — to copy, distribute and transmit the work
+to Remix — to adapt the work
+to make commercial use of the work
+
+http://creativecommons.org/licenses/by/3.0/
+
+Have Fun.

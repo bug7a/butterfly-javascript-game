@@ -12,6 +12,8 @@ and open the template in the editor.
         
         <link rel="stylesheet" type="text/css" href="css/butterflygame.css">
         <link rel="stylesheet" type="text/css" href="css/page.css">
+        
+        <script src="js/utilty.js"></script>
         <script src="js/global.js"></script>
         <script src="js/sound.js"></script>
         <script src="js/map.js"></script>
@@ -46,13 +48,37 @@ and open the template in the editor.
                     <img src="asset/player/player3.down.png">
                     <img src="asset/player/player3.left.png">
                     <img src="asset/player/player3.right.png">
+                    
+                    <img src="asset/bugs/bug1.up.png">
+                    <img src="asset/bugs/bug1.down.png">
+                    <img src="asset/bugs/bug1.left.png">
+                    <img src="asset/bugs/bug1.right.png">
+                    <img src="asset/bugs/bug1.stop.png">
+                    
+                    <img src="asset/bugs/bug2.up.png">
+                    <img src="asset/bugs/bug2.down.png">
+                    <img src="asset/bugs/bug2.left.png">
+                    <img src="asset/bugs/bug2.right.png">
+                    <img src="asset/bugs/bug2.stop.png">
+                </div>
+                
+                <div id="game-info" class="game-text">
+                    <div><b>Ok Tuşları (Arrow Keys):</b> Oyuncunun hareketini sağlar.</br><b>Boşluk (Space):</b> Üzerinde bulunduğun besini tüketir.</div>
+                </div>
+                
+                <div id="game-title" class="game-text" style='font-size: 20px;'>
+                    <div><b>Kelebeğin macerası</b> 1.0</div>
                 </div>
 
                 <div id="game-objects">
 
                 </div>
-
+                
                 <div id="player" style="top:352px;left:96px"><img src="asset/player/player1.up.png"></div>
+                
+                <div id="bug-container">
+                    
+                </div>
 
                 <div id="player-life-bar"><div id="player-life-bar-status"></div><img style="position: absolute;left: -30px;top:-4px;" src="asset/heart.png" width="20" height="20"></div>
                 <div id="player-key"><img src="asset/key.png"></div>
@@ -62,17 +88,19 @@ and open the template in the editor.
                     <div id="alert-box"></div>
                 </div>
                 
-                <div id="game-info" class="game-text">
-                    <div><b>Ok Tuşları (Arrow Keys):</b> Oyuncunun hareketini sağlar.</br><b>Boşluk (Space):</b> Üzerinde bulunduğun besini tüketir.</div>
+                <div id="keys-btn-container" class="game-pages" style="display: block;">
+
+                    <div onclick="Player.listenToTheKey({keyCode:Player.SPACE});" style="position: absolute; left:50px; bottom: 50px;"><img src="image/space-btn.png"></div>
+                    <div onclick="Player.listenToTheKey({keyCode:Player.KEY_RIGHT});" style="position: absolute; right:50px; bottom: 50px;"><img src="image/arrow-btn.png"></div>
+                    <div onclick="Player.listenToTheKey({keyCode:Player.KEY_DOWN});" style="position: absolute; right:120px; bottom: 50px;"><img src="image/arrow-btn.png"></div>
+                    <div onclick="Player.listenToTheKey({keyCode:Player.KEY_LEFT});" style="position: absolute; right:190px; bottom: 50px;"><img src="image/arrow-btn.png"></div>
+                    <div onclick="Player.listenToTheKey({keyCode:Player.KEY_UP});" style="position: absolute; right:120px; bottom: 120px;"><img src="image/arrow-btn.png"></div>
+                    
                 </div>
-                
-                <div id="game-title" class="game-text">
-                    <div><b>Kelebeğin macerası</b> 1.0</div>
-                </div>  
                 
                 <div id="start-page" class="game-pages" style="display: block;">
                     
-                    <div class="page-sub-container" style="background-color: #fafafa; "></div>
+                    <div class="page-sub-container" style="background-image: url('image/start-background.png');background-repeat: no-repeat;"></div>
                     
                     <div class="page-sub-container">
                     
@@ -98,7 +126,7 @@ and open the template in the editor.
                         
                         <div style="text-align: center;">
                             
-                            <div style="color: white;font-size: 30px;font-weight: bold;margin-bottom: 25px;">Devam edecek gücün kalmadı.</div>
+                            <div style="color: white;font-size: 30px;font-weight: bold;margin-bottom: 25px;">Devam edecek gücün kalmadı</div>
 
                             <div onclick="Page.show(Page.NAME.START);"><img src="image/close-btn.png"></div>
                         
@@ -107,6 +135,7 @@ and open the template in the editor.
                     </div>
                 
                 </div>
+                
                 <div id="game-win-page" class="game-pages" style="display: none">
                     
                     <div class="page-sub-container" style="background-color: mediumseagreen; opacity: 0.7; "></div>
@@ -115,8 +144,8 @@ and open the template in the editor.
                         
                         <div style="text-align: center;">
                             
-                            <div style="color: white;font-size: 30px;font-weight: bold;margin-bottom: 10px;">Tebirkler. Başardınız.</div>
-                            <div id="game-win-description" style="color: white;font-size: 18px;opacity: 0.6;margin-bottom: 25px;">Oyunu X puanla tamamladınız.</div>
+                            <div style="color: white;font-size: 30px;font-weight: bold;margin-bottom: 10px;">Tebrikler, Başardınız</div>
+                            <div id="game-win-description" style="color: white;font-size: 18px;opacity: 0.7;margin-bottom: 25px;">Oyunu X puanla tamamladınız</div>
 
                             <div onclick="Page.show(Page.NAME.START);"><img src="image/close-btn.png"></div>
                         
@@ -126,6 +155,21 @@ and open the template in the editor.
                     
                 </div>
 
+                <div id="loading-page" class="game-pages" style="display: block">
+                    
+                    <div class="page-sub-container" style="background-color: white; opacity:1; "></div>
+                    
+                    <div class="page-sub-container">
+                        
+                        <div style="text-align: center;">
+
+                            <div><img src="image/loading.gif"></div>
+                        
+                        </div>
+                        
+                    </div>
+                    
+                </div>
 
             </div>
         
@@ -142,6 +186,10 @@ and open the template in the editor.
         
         <audio id="hurt-sound">
           <source src="sound/hurt.mp3" type="audio/mpeg">
+        </audio>
+        
+        <audio id="attack-sound">
+          <source src="sound/bip.wav" type="audio/wav">
         </audio>
          
     </body>

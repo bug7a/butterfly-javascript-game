@@ -17,7 +17,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="game.svg"
+   sodipodi:docname="game.prototype.svg"
    inkscape:export-filename="E:\kidcodes\project\kelebek\source\video.preview.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
@@ -3630,6 +3630,53 @@
          k2="1"
          result="composite2" />
     </filter>
+    <filter
+       style="color-interpolation-filters:sRGB;"
+       inkscape:label="Colorize"
+       id="filter5397">
+      <feComposite
+         in2="SourceGraphic"
+         operator="arithmetic"
+         k1="0"
+         k2="1"
+         result="composite1"
+         id="feComposite5399" />
+      <feColorMatrix
+         in="composite1"
+         values="1"
+         type="saturate"
+         result="colormatrix1"
+         id="feColorMatrix5401" />
+      <feFlood
+         flood-opacity="1"
+         flood-color="rgb(213,70,10)"
+         result="flood1"
+         id="feFlood5403" />
+      <feBlend
+         in="flood1"
+         in2="colormatrix1"
+         mode="multiply"
+         result="blend1"
+         id="feBlend5405" />
+      <feBlend
+         in2="blend1"
+         mode="screen"
+         result="blend2"
+         id="feBlend5407" />
+      <feColorMatrix
+         in="blend2"
+         values="1"
+         type="saturate"
+         result="colormatrix2"
+         id="feColorMatrix5409" />
+      <feComposite
+         in="colormatrix2"
+         in2="SourceGraphic"
+         operator="in"
+         k2="1"
+         result="composite2"
+         id="feComposite5411" />
+    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -3639,14 +3686,14 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="158.35813"
-     inkscape:cy="466.35856"
+     inkscape:cx="405.49853"
+     inkscape:cy="666.35856"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="true"
-     inkscape:window-width="1438"
+     inkscape:window-width="1836"
      inkscape:window-height="995"
-     inkscape:window-x="452"
+     inkscape:window-x="54"
      inkscape:window-y="6"
      inkscape:window-maximized="0"
      units="px"
@@ -3781,6 +3828,57 @@
        preserveAspectRatio="none"
        height="32"
        width="32"
+       inkscape:export-filename="E:\kidcodes\project\kelebek\source\butterflyGame\public_html\asset\grass.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <image
+       y="516"
+       x="288"
+       id="image5007"
+       xlink:href="data:image/png;base64,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
+"
+       preserveAspectRatio="none"
+       height="32"
+       width="32"
+       style="fill:#e5961d;fill-opacity:0.8745098;filter:url(#filter5397)"
        inkscape:export-filename="E:\kidcodes\project\kelebek\source\butterflyGame\public_html\asset\grass.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
