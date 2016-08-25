@@ -1,6 +1,6 @@
 {
   "name": "Butterfly Javascript Game",
-  "tagline": "A butterfly adventure -very basic- game made with javascript (and game development videos)",
-  "body": "### How to make a video game?\r\nA web series (game dev tutorial videos) to teach people how to make a 2D web based game with Javascript, html, css (in Turkish)\r\n\r\n* Play game; https://goo.gl/Fr2EUR\r\n* Download source; https://goo.gl/F5QmUO\r\n* Project page; http://goo.gl/g2XTWx\r\n\r\n![2D game development](http://bug7a.github.io/butterfly-javascript-game/preview.png)",
+  "tagline": "A butterfly adventure -very basic- game sample made with javascript (and game development videos)",
+  "body": "### How to make a video game? (and basic artificial intelligence)\r\nA web series (game dev tutorial videos) to teach people how to make a 2D web based game with Javascript, html and css (in Turkish)\r\n\r\n* Play game; https://goo.gl/Fr2EUR\r\n* Download source; https://goo.gl/F5QmUO\r\n* Project page; http://goo.gl/g2XTWx\r\n\r\n![2D game development artificial intelligence](http://bug7a.github.io/butterfly-javascript-game/preview.png)\r\n\r\n(Keywords; javascript, game development, game dev, game, howto, make, tutorial, 2D, atari, artificial intelligence, mobile)",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
